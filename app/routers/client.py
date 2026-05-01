@@ -25,7 +25,7 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return new_user
 
 @router.post("/login", response_model=schemas.Token)
-def login(form_data: schemas.UserCreate, db: Session = Depends(get_db)):
+def login(form_data: schemas.UserLogin, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.email == form_data.email).first()
     if not user or not auth.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
