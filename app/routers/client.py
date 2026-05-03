@@ -84,6 +84,10 @@ def place_order(order_data: schemas.OrderCreate, db: Session = Depends(get_db), 
     db.refresh(new_order)
     return new_order
 
+@router.get("/orders", response_model=List[schemas.Order])
+def get_my_orders(db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    return db.query(models.Order).filter(models.Order.user_id == current_user.id).all()
+
 # --- Wishlist API ---
 @router.get("/wishlist", response_model=List[schemas.Wishlist])
 def get_wishlist(db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
